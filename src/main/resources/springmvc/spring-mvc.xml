@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="  
+    http://www.springframework.org/schema/beans
+    classpath:/org/springframework/beans/factory/xml/spring-beans-3.2.xsd  
+    http://www.springframework.org/schema/context
+    classpath:/org/springframework/context/config/spring-context-3.2.xsd  
+    http://www.springframework.org/schema/mvc
+    classpath:/org/springframework/web/servlet/config/spring-mvc-3.2.xsd">
+	
+	
+	
+	<mvc:annotation-driven />
+	
+	<!-- 扫描controller（controller层注入） -->
+	<context:component-scan
+		base-package="com.lin.controller" />
+
+	<!-- 对模型视图添加前后缀 -->
+	<bean id="viewResolver"
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+		p:prefix="/WEB-INF/view/" p:suffix=".html" />
+
+	<!-- 静态资源加载 -->
+	<mvc:default-servlet-handler />
+
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<!-- 拦截所有URL中包含/sample/**的请求 -->
+			<mvc:mapping path="/sample/**" />
+			<bean class="com.lin.interceptor.Interceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+	<!-- 文件上传 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<property name="maxUploadSize" value="5400000"></property>
+	</bean>
+</beans>

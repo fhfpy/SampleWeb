@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.ProductDetailDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.lin.domain.ProductDetail">
+		<id column="DjLsh" property="DjLsh" jdbcType="INTEGER" />
+		<result column="SJM" property="SJM" jdbcType="CHAR" />
+		<result column="LYM" property="LYM" jdbcType="CHAR" />
+		<result column="GG" property="GG" jdbcType="CHAR" />
+		<result column="CF" property="CF" jdbcType="CHAR" />
+		<result column="MD" property="MD" jdbcType="CHAR" />
+		<result column="KZ" property="KZ" jdbcType="DECIMAL" />
+		<result column="MF" property="MF" jdbcType="DECIMAL" />
+		<result column="MS" property="MS" jdbcType="CHAR" />
+		<result column="BZ" property="BZ" jdbcType="CHAR" />
+		<result column="GYSMC" property="GYSMC" jdbcType="CHAR" />
+		<result column="ZXPBCB" property="ZXPBCB" jdbcType="DECIMAL" />
+		<result column="ZXMLCB" property="ZXMLCB" jdbcType="DECIMAL" />
+		<result column="ZXRSCB" property="ZXRSCB" jdbcType="DECIMAL" />
+		<result column="YGSL" property="YGSL" jdbcType="DECIMAL" />
+	</resultMap>
+	<select id="getProductDetailById" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		View_JMYPKDAHFG
+		WHERE SJM = #{SJM,jdbcType=CHAR}
+	</select>
+	<select id="getProductLYMById" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		SELECT
+		b.LYM
+		FROM
+		JMYPKDAH h
+		LEFT JOIN JMYPKDAB b ON h.DjLsh = b.DjLsh
+		LEFT JOIN YPXXKH k ON b.LYM = k.LYM 
+		WHERE h.SJM = #{SJM,jdbcType=CHAR} and k.XS = 1
+	</select>
+</mapper> 

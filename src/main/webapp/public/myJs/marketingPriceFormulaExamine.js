@@ -1,0 +1,31 @@
+$(function(){
+	$.ajax({
+		url:'/VCE/Market/listFormula',
+		data:{formulaId:getQueryString('formulaId')},
+		type: 'POST',
+		datatype:'json',
+		success:function(data){
+			autoSetValue(data.rows[0]);	
+		}
+	});
+})
+function autoSetValue(date){
+	$("#formulaName").textbox('setValue',date.formulaName);
+	$("#warehouse").textbox('setValue',date.warehouse);
+	$("#memo").textbox('setValue',date.memo);
+	if(date.firstWeight==0){
+		$("#firstPriceNot").textbox('setValue',date.firstPrice);
+		$("#continuPriceNot").textbox('setValue',date.continuPrice);
+		$("#type-1").hide();
+		$("#type-2").hide();
+		$("#type-3").show();
+	}
+	else{
+		$("#firstWeight").textbox('setValue',date.firstWeight);
+		$("#firstPrice").textbox('setValue',date.firstPrice);
+		$("#continuPrice").textbox('setValue',date.continuPrice);
+		$("#type-3").hide();
+		$("#type-2").show();
+		$("#type-1").show();
+	}
+}

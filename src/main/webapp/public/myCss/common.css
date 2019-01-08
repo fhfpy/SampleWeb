@@ -1,0 +1,18 @@
+.toolbar a:link {
+color: #000000;
+}
+.toolbar a:visited {
+color: #000000;
+}
+.toolbar a:hover {
+color: #000000;
+}
+.toolbar a:active {
+color: #000000;
+}
+.f-center{
+	text-align: center;
+}
+.permission-control{
+	display: none;
+}

@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>样品列表</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css"
+	href="../public/css/candy-box.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/animate.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/jquery.skippr.css" />
+<link rel="stylesheet" type="text/css" href="../public/css/xysstyle.css" />
+<!-- Toastr script -->
+<link href="../public/css/plugins/toastr/toastr.min.css"
+	rel="stylesheet">
+<link href="../public/css/easyui.css" rel="stylesheet">
+<link href="../public/css/paging.css" rel="stylesheet">
+<link href="../public/css/animate.css" rel="stylesheet">
+<style type="text/css">
+.textbox {
+	border: none
+}
+
+ul {
+	list-style: none;
+	-webkit-padding-start: 15px;
+	-webkit-padding-end: 15px;
+}
+</style>
+
+</head>
+
+<body class="gray-bg">
+	<header>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid" style="position: relative;">
+				<div class="fcenter" style="position: relative">
+					<img src="../public/img/富丽达.svg"
+						style="width: 82px; position: absolute; top: 50px; left: 0; bottom: 0; right: 0; margin: auto;">
+					<div class="navbar-header"
+						style="position: absolute; top: 0; right: 0;">
+						<button type="button" class="navbar-toggle collapsed"
+							data-toggle="collapse"
+							data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse navbar-right"
+					id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li><a href="plate.html">首页</a></li>
+						<li><a id="ipt" href="clothing.html">样衣</a>
+							<ul id="ul"
+								style="background: #fff; z-index: 999; position: absolute;">
+								<li><a href="clothing.html?type=m">男装</a></li>
+								<li><a href="clothing.html?type=w">女装</a></li>
+							</ul></li>
+						<li><a href="sampleList.html">面料</a></li>
+						<li><a href="checkList.html">选样</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<section class="hiview">
+		<div class="container">
+			<div class="hiview-header"></div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div>
+						<div role="form" class="form-horizontal m-t">
+							<div class="form-group">
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">面料编码</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="SJM" type="text" data-options="prompt:'请输入面料编码'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">来源码</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="LYM" type="text" data-options="prompt:'请输入来源码'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">成
+									份</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="CF" type="text" data-options="prompt:'|P| |R|'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">描
+									述</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="MS" type="text" data-options="prompt:'请输入描述'"
+										class="easyui-textbox form-control">
+								</div>
+							</div>
+							<div class="col-sm-3 col-sm-offset-9">
+								<button type="button" class="btn btn-white" id="btn-search">查询</button>
+								<button type="button" class="btn btn-white" id="btn-clear">清空</button>
+								<button type="button" class="btn btn-white" id="btn-highsearch">高级查询</button>
+								<button type="button" class="btn btn-white" id="import">导出</button>
+								<button type="button" class="btn btn-white" id="show">切换</button>
+								<button type="button" class="btn btn-white" id="jmyppic">查询图片</button>
+							</div>
+							<div class="form-group" id="f1" style="display: none;">
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">克
+									重</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="kzmin" type="text" data-options="prompt:'请输入最小克重'"
+										class="easyui-textbox form-control">
+								</div>
+								<div class="col-sm-1 col-xs-7">
+									<input id="kzmax" type="text" data-options="prompt:'请输入最大克重'"
+										class="easyui-textbox form-control">
+								</div>
+
+								<label class="col-sm-1 col-xs-4 control-label">样品库存</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="ypmin" type="text" data-options="prompt:'请输入最低库存'"
+										class="easyui-textbox form-control">
+								</div>
+								<div class="col-sm-1 col-xs-7">
+									<input id="ypmax" type="text" data-options="prompt:'请输入最大库存'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 control-label">样卡库存</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="ykmin" type="text" data-options="prompt:'请输入最低库存'"
+										class="easyui-textbox form-control">
+								</div>
+								<div class="col-sm-1 col-xs-7">
+									<input id="ykmax" type="text" data-options="prompt:'请输入最大库存'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 control-label">成份比例</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="cfbl" type="text" data-options="prompt:'P75% R25%'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">精确成份</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="cfjq" type="text" data-options="prompt:'|P| |R|'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">纱织规格</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="GG" type="text" data-options="prompt:'请输入纱织规格'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">供应商</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="GYSMC" type="text" data-options="prompt:'请输入供应商'"
+										class="easyui-textbox form-control">
+								</div>
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">部门</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="DepName" type="text" data-options="prompt:'请输入部门'"
+										class="easyui-textbox form-control">
+								</div>
+
+								<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">日期</label>
+								<div class="col-sm-1 col-xs-7">
+									<input id="JDRQKS" type="text"
+										data-options="prompt:'2018-8-17'"
+										class="easyui-textbox form-control">
+								</div>
+								<div class="col-sm-1 col-xs-7">
+									<input id="JDRQJS" type="text"
+										data-options="prompt:'2018-10-17'"
+										class="easyui-textbox form-control">
+								</div>
+							</div>
+						</div>
+
+						<div class="hr-line-dashed"></div>
+						<div role="form" class="form-horizontal m-t" id="sampleList"
+							style="width: 75%; margin: 0 auto"></div>
+
+					</div>
+				</div>
+			</div>
+			<div class="row" id="llist"></div>
+		</div>
+	</section>
+	<div align="center" id="table">
+		<div class="ibox-body">
+			<table class="easyui-datagrid" id="sampledatagrid">
+				<thead>
+					<tr>
+						<th data-options="field:'ck',checkbox:true"></th>
+						<th data-options="field:'SJM',width:80,align:'center'">随机码</th>
+						<th data-options="field:'CF',width:200,align:'center'">成份</th>
+						<th data-options="field:'KZ',width:80,align:'center'">克重</th>
+						<th data-options="field:'MF',width:80,align:'center'">门幅</th>
+						<th data-options="field:'GG',width:200,align:'center'">规格</th>
+						<th data-options="field:'MD',width:80,align:'center'">密度</th>
+						<th data-options="field:'MS',width:200,align:'center'">描述</th>
+						<th data-options="field:'ZXPBCB',width:80,align:'center'">坯布</th>
+						<th data-options="field:'ZXMLCB',width:80,align:'center'">成品</th>
+						<th data-options="field:'ZXRSCB',width:80,align:'center'">染费</th>
+						<th data-options="field:'YGSL',width:80,align:'center'">预估缩率</th>
+						<th data-options="field:'GYSMC',width:200,align:'center'">供应商</th>
+						<th data-options="field:'LYM',width:200,align:'center'">来源码</th>
+						<th data-options="field:'BZ',width:120,align:'center'">备注</th>
+					</tr>
+				</thead>
+			</table>
+		</div>
+	</div>
+	<div class="fcenter">
+		<div id="page" class="page_div"></div>
+	</div>
+
+	<div class="modal inmodal" id="listModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated">
+
+				<div class="col-sm-12" data-delay="0">
+					<div style="height: 10px"></div>
+					<h5 class="col-sm-3">仓库类型</h5>
+					<div class="col-sm-3">
+						<input id="sCKMC" type="text" data-options="prompt:'请输入仓库类型'"
+							class="easyui-textbox form-control">
+					</div>
+					<h5 class="col-sm-3">颜色</h5>
+					<div class="col-sm-3">
+						<input id="sYS" type="text" data-options="prompt:'请输入颜色'"
+							class="easyui-textbox form-control">
+					</div>
+					<div class="col-sm-6">
+						<button type="button" class="btn btn-white" id="btn-searchs">查询</button>
+						<button type="button" class="btn btn-white" id="btn-clears">清空</button>
+					</div>
+					<table class="easyui-datagrid" id="stockdatagrid">
+						<thead>
+							<tr>
+								<th data-options="field:'ck',checkbox:true"></th>
+								<th data-options="field:'CKMC',width:50">仓库类型</th>
+								<th
+									data-options="field:'OccurDate',width:70,formatter:TimeFormatter">入库时间</th>
+								<th data-options="field:'DepName',width:50">部门</th>
+								<th data-options="field:'HW',width:100">货位</th>
+								<th data-options="field:'YS',width:50">颜色</th>
+								<th data-options="field:'SL',width:50">库存数量</th>
+							</tr>
+						</thead>
+					</table>
+				</div>
+
+				<div class="modal-footer">
+					<input id="s" type="text" style="display: none">
+					<input id="allSJM" type="text" style="display: none">
+				</div>
+			</div>
+		</div>
+		<div style="display: none">
+			<span>Selection Mode: </span> <select
+				onchange="$('#stockdatagrid').datagrid({singleSelect:(this.value==0)})">
+				<option value="0">Single Row</option>
+				<option value="1">Multiple Rows</option>
+			</select><br /> SelectOnCheck: <input checked="checked" type="checkbox"
+				checked
+				onchange="$('#stockdatagrid').datagrid({selectOnCheck:$(this).is(':checked')})"><br />
+			CheckOnSelect: <input checked="checked" type="checkbox" checked
+				onchange="$('#stockdatagrid').datagrid({checkOnSelect:$(this).is(':checked')})">
+		</div>
+
+	</div>
+
+	<div class="modal inmodal" id="checkModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h6 class="modal-title">选样单</h6>
+
+				</div>
+				<div class="modal-body">
+					<form role="form" class="form-horizontal m-t">
+						<div class="form-group">
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="仓库名称" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="CKMC" type="text" class="easyui-textbox form-control"
+									editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="入库日期" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="OccurDate" type="text"
+									class="easyui-textbox form-control" editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="部门" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="DepName" type="text"
+									class="easyui-textbox form-control" editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="随机码" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="sjm" type="text" class="easyui-textbox form-control"
+									editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="货位" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="HW" type="text" class="easyui-textbox form-control"
+									editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="颜色" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="YS" type="text" class="easyui-textbox form-control"
+									editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									data-options="precision:2" value="剩余数量" editable="false">
+							</div>
+							<div class="col-sm-7">
+								<input id="SL" type="text" class="easyui-numberbox form-control"
+									editable="false">
+							</div>
+							<div class="col-sm-2 col-sm-offset-3">
+								<input type="text" class="easyui-textbox form-control"
+									value="选样数量" editable="false">
+							</div>
+							<div class="col-sm-2">
+								<input id="num" class="easyui-numberspinner" precision="1"
+									increment="1" data-options="min:0" value="0"
+									style="width: 60px;"></input>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" onclick="saveCheck()">保存</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<!-- 全局js -->
+	<script src="../public/js/jquery.min.js?v=2.1.4"></script>
+	<script src="../public/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+	<!-- Peity -->
+	<script src="../public/js/plugins/peity/jquery.peity.min.js"></script>
+
+	<!-- easyui DataGrid -->
+	<script src="../public/js/jquery.easyui.min.js"></script>
+
+	<!-- Toastr script -->
+	<script src="../public/js/plugins/toastr/toastr.min.js"></script>
+
+	<!-- 自定义js -->
+	<script src="../public/js/content.js?v=1.0.0"></script>
+
+	<script src="../public/js/paging.js"></script>
+
+	<script src="../public/js/common.js"></script>
+
+	<script src="../public/myJs/sampleList.js"></script>
+</body>
+
+</html>

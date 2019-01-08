@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>品种工艺单</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css"
+	href="../public/css/candy-box.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/animate.min.css" />
+<link rel="stylesheet" type="text/css" href="../public/css/xysstyle.css" />
+<!-- Toastr script -->
+<link href="../public/css/plugins/toastr/toastr.min.css"
+	rel="stylesheet">
+<link href="../public/css/easyui.css" rel="stylesheet">
+<link href="../public/css/paging.css" rel="stylesheet">
+<link href="../public/css/animate.css" rel="stylesheet">
+<style>
+body {
+	font-family: 宋体 !important;
+}
+
+td input {
+	margin-top: -1px;
+	margin-bottom: -1px;
+	height: 100%;
+	width: 60%;
+	border: none;
+	text-align: center;
+}
+</style>
+
+</head>
+
+<body class="gray-bg">
+	<section class="hiview">
+		<div align="center">
+			<div style="margin-top: 30px; font-size: 30px; font-weight: bold;">品种工艺</div>
+			<div
+				style="margin-top: 30px; width: 800px; text-align: center;; font-size: 16px">
+				<div style="width: 33%; float: left">织造工艺单</div>
+				<div id="pbmc" style="width: 33%; float: left">品号：</div>
+				<div style="width: 33%; float: left">
+					<button id="add" class="btn btn-primary " type="button">添加附页</button>
+					<button id="save" class="btn btn-primary " type="button">修改</button>
+				</div>
+			</div>
+			<table id="table" border="1"
+				style="display: ''; margin-top: 60px; width: 800px; text-align: center; font-size: 16px;">
+			</table>
+			<div
+				style="margin-top: 5px; width: 800px; text-align: center; font-size: 16px">
+				<div id="bzr" style="width: 33%; float: left">编制人：</div>
+				<div id="pzr" style="width: 33%; float: left">批准人：</div>
+				<div id="rq" style="width: 33%; float: left">日期：</div>
+			</div>
+			<div
+				style="margin-top: 300px; width: 800px; height: 1000px; text-align: center; font-size: 16px" id="d1">
+				<table border="1" id="table1"
+					style="margin: auto; letter-spacing: 3px; width: 800px;">附页(穿综顺序)
+				</table>
+			</div>
+			<div
+				style="margin-top: 300px; width: 800px; height: 1000px; text-align: center; font-size: 16px" id="d2">
+				<table border="1" id="table2"
+					style="margin: auto; letter-spacing: 3px; width: 800px;">附页(经丝排列)
+				</table>
+			</div>
+			<div
+				style="margin-top: 300px; width: 800px; height: 1000px; text-align: center; font-size: 16px" id="d3">
+				<table border="1" id="table3"
+					style="margin: auto; letter-spacing: 3px; width: 800px;">附页(纬丝排列)
+				</table>
+			</div>
+			<div
+				style="margin-top: 300px; width: 800px; height: 1000px; text-align: center; font-size: 16px" id="d4">
+				<table border="1" id="table4"
+					style="margin: auto; letter-spacing: 3px; width: 800px;">附页(纹钉)
+				</table>
+			</div>
+		</div>
+	</section>
+	<div class="modal inmodal" id="searchModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h6 class="modal-title">纱线名</h6>
+
+				</div>
+				<div class="modal-body">
+					<select class="easyui-combobox" required="required"
+						data-options="valueField:'djLsh',textField:'sx',prompt:'请选择纱线'"
+						id="sx" style="width: 50px">
+					</select>
+				</div>
+
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id='submitSx'>确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal inmodal" id="addModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h6 class="modal-title">附页</h6>
+					<input type="checkbox" id="check1">穿综顺序 <input
+						type="checkbox" id="check2">经丝排列 <input type="checkbox"
+						id="check3">纬丝排列 <input type="checkbox" id="check4">纹钉
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-primary" id='submitAdd'>确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../public/js/jquery.min.js?v=2.1.4"></script>
+	<script src="../public/js/bootstrap.min.js?v=3.3.6"></script>
+	<!-- Toastr script -->
+	<!-- easyui DataGrid -->
+	<script src="../public/js/jquery.easyui.min.js"></script>
+
+	<script src="../public/js/plugins/toastr/toastr.min.js"></script>
+	<script src="../public/js/common.js"></script>
+	<script src="../public/myJs/TechnologyEdit.js"></script>
+</body>
+
+</html>

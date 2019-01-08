@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.SampleDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.lin.domain.Product">
+		<id column="DjLsh" property="DjLsh" jdbcType="INTEGER" />
+		<result column="SJM" property="SJM" jdbcType="CHAR" />
+		<result column="GG" property="GG" jdbcType="CHAR" />
+		<result column="MD" property="MD" jdbcType="CHAR" />
+		<result column="CF" property="CF" jdbcType="CHAR" />
+		<result column="KZ" property="KZ" jdbcType="DECIMAL" />
+		<result column="MF" property="MF" jdbcType="DECIMAL" />
+		<result column="GYSMC" property="GYSMC" jdbcType="CHAR" />
+		<result column="Qty" property="Qty" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="limit">
+		<if test="rows != null and rows != ''"> limit #{start},#{rows}  	</if>
+	</sql>
+	<sql id="Search_listProduct_Info">
+		<if test="SJM != null and SJM !=''">
+			and SJM like
+			'%'+#{SJM,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="CF != null and CF !=''">
+			and CFJX like
+			'%'+#{CF,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="cfbl != null and cfbl !=''">
+			and CF like
+			'%'+#{cfbl,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="cfjq != null and cfjq !=''">
+			and CFJX = #{cfjq,jdbcType=VARCHAR}
+		</if>
+		<if test="MS != null and MS !=''">
+			and MS like
+			'%'+#{MS,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="GYSMC != null and GYSMC !=''">
+			and GYSMC like
+			'%'+#{GYSMC,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="LYM != null and LYM !=''">
+			and LYM like
+			'%'+#{LYM,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="JDRQKS != null and JDRQKS !=''">
+			and JDRQ &gt;= convert(datetime,
+			#{JDRQKS,jdbcType=VARCHAR},120)
+		</if>
+		<if test="JDRQJS != null and JDRQJS !=''">
+			and JDRQ &lt;= convert(datetime,
+			#{JDRQJS,jdbcType=VARCHAR},120)
+		</if>
+		<if test="kzmin != null and kzmin !=''">
+			and KZ &gt;= #{kzmin,jdbcType=VARCHAR}
+		</if>
+		<if test="kzmax != null and kzmax !=''">
+			and KZ &lt;= #{kzmax,jdbcType=VARCHAR}
+		</if>
+		<if test="ypmin != null and kzmin !=''">
+			and ypsl &gt;= #{ypmin,jdbcType=VARCHAR}
+		</if>
+		<if test="ypmax != null and kzmax !=''">
+			and ypsl &lt;= #{ypmax,jdbcType=VARCHAR}
+		</if>
+		<if test="ykmin != null and kzmin !=''">
+			and yksl &gt;= #{ykmin,jdbcType=VARCHAR}
+		</if>
+		<if test="ykmax != null and kzmax !=''">
+			and yksl &lt;= #{ykmax,jdbcType=VARCHAR}
+		</if>
+		<if test="GG != null and GG !=''">
+			and GG like
+			'%'+#{GG,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="DepName != null and DepName !=''">
+			and DepName like
+			'%'+#{DepName,jdbcType=VARCHAR}+'%'
+		</if>
+	</sql>
+
+	<select id="selectSjmByLym" parameterType="String" resultType="String">
+		SELECT SJM
+		FROM
+		YPXXKH
+		where LYM = #{str,jdbcType=VARCHAR}
+	</select>
+	<!-- 查询样品列表 -->
+	<select id="listProduct" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		DECLARE @r AS int
+		SET @r=#{rows}
+		DECLARE @p AS int
+		SET @p=#{page}
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		*, ROW_NUMBER () OVER (ORDER BY Qty DESC) AS num
+		FROM
+		View_JMYPKDAHFG
+		WHERE
+		View_JMYPKDAHFG.xs = 1
+		<include refid="Search_listProduct_Info" />
+		) a
+		WHERE
+		a.num BETWEEN @r*(@p-1) + 1 and @r*@p
+	</select>
+
+	<select id="listProductT" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		DECLARE @r AS int
+		SET @r=#{rows}
+		DECLARE @p AS int
+		SET @p=#{page}
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		*, ROW_NUMBER () OVER (ORDER BY DjLsh DESC) AS num
+		FROM
+		View_JMYPKDAHF
+		WHERE XS=1
+		<include refid="Search_listProduct_Info" />
+		) a
+		WHERE
+		a.num BETWEEN @r*(@p-1) + 1 and @r*@p
+	</select>
+
+	<select id="countProduct" parameterType="com.lin.domain.Product"
+		resultType="int">
+		SELECT count(*)
+		FROM
+		View_JMYPKDAHFG
+		where View_JMYPKDAHFG.xs = 1
+		<include refid="Search_listProduct_Info" />
+	</select>
+
+	<select id="countProductT" parameterType="com.lin.domain.Product"
+		resultType="int">
+		SELECT count(*)
+		FROM
+		View_JMYPKDAHF
+		where View_JMYPKDAHF.xs = 1
+		<include refid="Search_listProduct_Info" />
+	</select>
+	
+	<select id="listStrPics" resultType="com.lin.domain.Product">
+		SELECT SJM,HKKW FROM JMYPKDAH WHERE XS=1
+	</select>
+	<!-- 查询样品详情 -->
+	<select id="detailProduct" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		SELECT * FROM JMYPKDAH
+		where DjLsh =
+		#{DjLsh,jdbcType=INTEGER}
+	</select>
+	<select id="selectSample" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		SELECT LYM,GYSMC
+		from View_JMYPKDAHFG
+		where
+		SJM=#{SJM,jdbcType=VARCHAR}
+	</select>
+	<insert id="insertTechnology" parameterType="string">
+		insert into
+		Technology (str) values (#{str,jdbcType=CHAR})
+	</insert>
+	<insert id="savepic" parameterType="com.lin.domain.Pic">
+		insert into jmyppic
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="pic != null">
+				pic,
+			</if>
+			<if test="date != null">
+				date,
+			</if>
+			<if test="datetime != null">
+				datetime,
+			</if>
+			<if test="timestamp != null">
+				timestamp,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="pic != null">
+				#{pic},
+			</if>
+			<if test="date != null">
+				#{date}, 
+			</if>
+			<if test="datetime != null">
+				#{datetime},
+			</if>
+			<if test="timestamp != null">
+				#{timestamp},
+			</if>
+		</trim>
+	</insert>
+	<!-- 样品选样保存 -->
+	<insert id="saveCheck" parameterType="com.lin.domain.Sample">
+		insert into Sample
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				userId,
+			</if>
+			<if test="state != null">
+				state,
+			</if>
+			<if test="date != null">
+				date,
+			</if>
+			<if test="SJM != null">
+				SJM,
+			</if>
+			<if test="CKMC != null">
+				CKMC,
+			</if>
+			<if test="OccurDate != null">
+				OccurDate,
+			</if>
+			<if test="DepName != null">
+				DepName,
+			</if>
+			<if test="HW != null">
+				HW,
+			</if>
+			<if test="YS != null">
+				YS,
+			</if>
+			<if test="SL != null">
+				SL,
+			</if>
+			<if test="HWSL != null">
+				HWSL,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=CHAR},
+			</if>
+			<if test="state != null">
+				#{state,jdbcType=INTEGER},
+			</if>
+			<if test="date != null">
+				#{date,jdbcType=TIMESTAMP},
+			</if>
+			<if test="SJM != null">
+				#{SJM,jdbcType=CHAR},
+			</if>
+			<if test="CKMC != null">
+				#{CKMC,jdbcType=CHAR},
+			</if>
+			<if test="OccurDate != null">
+				#{OccurDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="DepName != null">
+				#{DepName,jdbcType=CHAR},
+			</if>
+			<if test="HW != null">
+				#{HW,jdbcType=CHAR},
+			</if>
+			<if test="YS != null">
+				#{YS,jdbcType=CHAR},
+			</if>
+			<if test="SL != null">
+				#{SL,jdbcType=DECIMAL},
+			</if>
+			<if test="HWSL != null">
+				#{HWSL,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+</mapper> 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.StockDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.lin.domain.Stock">
+		<result column="CKMC" property="CKMC" jdbcType="CHAR" />
+		<result column="DepName" property="DepName" jdbcType="CHAR" />
+		<result column="SJM" property="SJM" jdbcType="CHAR" />
+		<result column="HW" property="HW" jdbcType="CHAR" />
+		<result column="YS" property="YS" jdbcType="CHAR" />
+		<result column="SL" property="SL" jdbcType="DECIMAL" />
+		<result column="OccurDate" property="OccurDate" jdbcType="TIMESTAMP" />
+	</resultMap>
+	<sql id="Search_listStock_Info">
+		<if test="CKMC != null">
+			and CKMC like
+			'%'+#{CKMC,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="DepName != null">
+			and DepName like
+			'%'+#{DepName,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="YS != null">
+			and YS like
+			'%'+#{YS,jdbcType=VARCHAR}+'%'
+		</if>
+	</sql>
+	<select id="getStockBySJM" parameterType="com.lin.domain.Stock"
+		resultMap="BaseResultMap">
+		DECLARE @r AS int
+		SET @r=#{rows}
+		DECLARE @p AS int
+		SET @p=#{page}
+		SELECT
+		*
+		FROM
+		(
+		SELECT
+		*, ROW_NUMBER () OVER (ORDER BY CKMC DESC,DepName DESC,HW) AS num
+		FROM
+		View_YPKCMXF
+		WHERE
+		SJM=#{SJM,jdbcType=CHAR}
+		<include refid="Search_listStock_Info" />
+		) a
+		WHERE
+		a.num BETWEEN @r*(@p-1) + 1 and @r*@p
+	</select>
+	<select id="countgetStockBySJM" parameterType="com.lin.domain.Stock"
+		resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		View_YPKCMXF
+		WHERE
+		SJM=#{SJM,jdbcType=CHAR}
+	</select>
+	<select id="getStockYSBySJM" parameterType="com.lin.domain.Stock"
+		resultMap="BaseResultMap">
+		SELECT DISTINCT
+		(YS)
+		FROM
+		View_YPKCMXF
+		WHERE
+		SJM =#{SJM,jdbcType=CHAR} AND CKMC NOT LIKE '样卡仓库'
+	</select>
+</mapper> 

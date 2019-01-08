@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.ClothingDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.lin.domain.Clothing">
+		<id column="clothingId" property="clothingId" jdbcType="INTEGER" />
+		<result column="clothingLinkId" property="clothingLinkId" jdbcType="CHAR" />
+		<result column="clothingCode" property="clothingCode" jdbcType="CHAR" />
+		<result column="SJM" property="SJM" jdbcType="CHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="position" property="position" jdbcType="CHAR" />
+		<result column="type" property="type" jdbcType="CHAR" />
+		<result column="ssbw" property="ssbw" jdbcType="CHAR" />
+		<result column="xw" property="xw" jdbcType="CHAR" />
+		<result column="ssyw" property="ssyw" jdbcType="CHAR" />
+		<result column="ssjk" property="ssjk" jdbcType="CHAR" />
+		<result column="qzc" property="qzc" jdbcType="CHAR" />
+		<result column="hzc" property="hzc" jdbcType="CHAR" />
+		<result column="xc" property="xc" jdbcType="CHAR" />
+		<result column="xkw" property="xkw" jdbcType="CHAR" />
+		<result column="bw" property="bw" jdbcType="CHAR" />
+		<result column="xsbw" property="xsbw" jdbcType="CHAR" />
+		<result column="qc" property="qc" jdbcType="CHAR" />
+		<result column="xsyw" property="xsyw" jdbcType="CHAR" />
+		<result column="tw" property="tw" jdbcType="CHAR" />
+		<result column="ql" property="ql" jdbcType="CHAR" />
+		<result column="hl" property="hl" jdbcType="CHAR" />
+		<result column="xsjk" property="xsjk" jdbcType="CHAR" />
+	</resultMap>
+	<sql id="limit">
+		<if test="rows != null and rows != ''"> limit #{start},#{rows}  	</if>
+	</sql>
+	<sql id="Search_listClothing_Info">
+		<if test="SJM != null">
+			and SJM like
+			'%'+#{SJM,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="clothingCode != null">
+			and clothingCode like
+			'%'+#{clothingCode,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="type != null">
+			and type like
+			'%'+#{type,jdbcType=VARCHAR}+'%'
+		</if>
+	</sql>
+
+	<sql id="Search_listClothingEdit_Info">
+		<if test="SJM != null">
+			and SJM like
+			'%'+#{SJM,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="clothingCode != null">
+			and clothingCode like
+			'%'+#{clothingCode,jdbcType=VARCHAR}+'%'
+		</if>
+	</sql>
+
+
+	<!-- 查询样品列表 -->
+	<select id="listClothing" parameterType="com.lin.domain.Clothing"
+		resultMap="BaseResultMap">
+		DECLARE @r AS int
+		SET @r=#{rows}
+		DECLARE @p AS int
+		SET @p=#{page}
+		SELECT
+		TOP (@r) *
+		FROM
+		(select min(clothingId) as clothingId,clothingCode,
+		stuff((select ','+SJM from View_ClothingLink
+		where c.clothingCode=clothingCode
+		for xml path('')),1,1,'') as SJM ,type
+		from View_ClothingLink c
+		group by c.clothingCode,type) a
+		WHERE
+		clothingId NOT IN (
+		SELECT
+		TOP
+		((@r)*
+		((@p) -
+		1))
+		clothingId
+		FROM
+		(select min(clothingId) as
+		clothingId,clothingCode,
+		stuff((select ','+SJM from View_ClothingLink
+		where c.clothingCode=clothingCode
+		for xml path('')),1,1,'') as SJM ,type
+		from View_ClothingLink c
+		group by c.clothingCode,type) a
+		where 1=1
+		<include refid="Search_listClothing_Info" />
+		ORDER BY a.clothingCode DESC
+		)
+		<include refid="Search_listClothing_Info" />
+		ORDER BY a.clothingCode DESC
+	</select>
+
+	<select id="countClothing" parameterType="com.lin.domain.Clothing"
+		resultType="int">
+		SELECT count(*)
+		FROM
+		(select min(clothingId) as clothingId,clothingCode,
+		stuff((select ','+SJM from View_ClothingLink
+		where c.clothingCode=clothingCode
+		for xml path('')),1,1,'') as SJM ,type
+		from View_ClothingLink c
+		group by c.clothingCode,type) a
+		where 1=1
+		<include refid="Search_listClothing_Info" />
+	</select>
+
+	<select id="clothingDetail" parameterType="com.lin.domain.Clothing"
+		resultMap="BaseResultMap">
+		SELECT top 1 *
+		FROM
+		View_ClothingLink
+		WHERE
+		clothingCode = #{clothingCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectByClothing" parameterType="com.lin.domain.Clothing"
+		resultMap="BaseResultMap">
+		SELECT *
+		FROM
+		View_ClothingLink
+		where clothingCode
+		=#{clothingCode,jdbcType=VARCHAR} and SJM=#{SJM,jdbcType=VARCHAR}
+	</select>
+
+	<select id="listPosition" parameterType="com.lin.domain.Clothing"
+		resultMap="BaseResultMap">
+		SELECT *
+		FROM
+		View_ClothingLink
+		where clothingCode
+		=#{clothingCode,jdbcType=VARCHAR}
+	</select>
+
+	<select id="listClothingEdit" parameterType="com.lin.domain.Clothing"
+		resultMap="BaseResultMap">
+		DECLARE @r AS int 
+		SET @r=#{rows}
+		DECLARE @p AS int
+		SET @p=#{page}
+		SELECT
+		TOP (@r) * 
+		FROM
+		clothingLink
+		WHERE
+		clothingLinkId NOT IN (
+		SELECT
+		TOP
+		((@r)* ((@p) -
+		1))
+		clothingLinkId 
+		FROM
+		clothingLink
+		where 1=1
+		<include refid="Search_listClothingEdit_Info" />
+		)
+		<include refid="Search_listClothingEdit_Info" />
+	</select>
+
+	<select id="countListClothingEdit" resultType="int"
+		parameterType="com.lin.domain.Clothing">
+		SELECT count(*)
+		FROM clothingLink
+		where 1=1
+		<include refid="Search_listClothingEdit_Info" />
+	</select>
+
+	<update id="saveClothing" parameterType="com.lin.domain.Clothing">
+		update clothing
+		<set>
+			<if test="clothingCode != null">
+				clothingCode = #{clothingCode,jdbcType=VARCHAR},
+			</if>
+			<if test="SJM != null">
+				SJM = #{SJM,jdbcType=VARCHAR},
+			</if>
+			<if test="state != null">
+				state = #{state,jdbcType=INTEGER},
+			</if>
+			<if test="type != null">
+				type = #{type,jdbcType=INTEGER},
+			</if>
+			<if test="ssbw != null">
+				ssbw = #{ssbw,jdbcType=VARCHAR},
+			</if>
+			<if test="xw != null">
+				xw = #{xw,jdbcType=VARCHAR},
+			</if>
+			<if test="ssyw != null">
+				ssyw = #{ssyw,jdbcType=VARCHAR},
+			</if>
+			<if test="ssjk != null">
+				ssjk = #{ssjk,jdbcType=VARCHAR},
+			</if>
+			<if test="qzc != null">
+				qzc = #{qzc,jdbcType=VARCHAR},
+			</if>
+			<if test="hzc != null">
+				hzc = #{hzc,jdbcType=VARCHAR},
+			</if>
+			<if test="xc != null">
+				xc = #{xc,jdbcType=VARCHAR},
+			</if>
+			<if test="xkw != null">
+				xkw = #{xkw,jdbcType=VARCHAR},
+			</if>
+			<if test="bw != null">
+				bw = #{bw,jdbcType=VARCHAR},
+			</if>
+			<if test="xsbw != null">
+				xsbw = #{xsbw,jdbcType=VARCHAR},
+			</if>
+			<if test="qc != null">
+				qc = #{qc,jdbcType=VARCHAR},
+			</if>
+			<if test="xsyw != null">
+				xsyw = #{xsyw,jdbcType=VARCHAR},
+			</if>
+			<if test="tw != null">
+				tw = #{tw,jdbcType=VARCHAR},
+			</if>
+			<if test="ql != null">
+				ql = #{ql,jdbcType=VARCHAR},
+			</if>
+			<if test="hl != null">
+				hl = #{hl,jdbcType=VARCHAR},
+			</if>
+			<if test="xsjk != null">
+				xsjk = #{xsjk,jdbcType=VARCHAR},
+			</if> 
+		</set>
+		where clothingId = #{clothingId,jdbcType=INTEGER}
+	</update>
+	<update id="saveClothingEdit" parameterType="com.lin.domain.Clothing">
+		update clothingLink set clothingCode = #{clothingCode,jdbcType=VARCHAR},SJM = #{SJM,jdbcType=VARCHAR},position = #{position,jdbcType=VARCHAR}
+		where clothingLinkId = #{clothingLinkId,jdbcType=VARCHAR}
+	</update> 
+	<delete id="deleteClothingEdit" parameterType="com.lin.domain.Clothing">
+		delete from clothingLink where clothingLinkId = #{clothingLinkId,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insertClothingLink" parameterType="com.lin.domain.Clothing">
+		insert into
+		clothingLink(clothingCode, SJM,position)
+		values(#{clothingCode,jdbcType=VARCHAR},#{SJM,jdbcType=VARCHAR},#{position,jdbcType=VARCHAR})
+	</insert>
+	<insert id="insertClothing" parameterType="com.lin.domain.Clothing">
+		insert into
+		clothing(clothingCode,type)
+		values(#{clothingCode,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR})
+	</insert>
+</mapper> 

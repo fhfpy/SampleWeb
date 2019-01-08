@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.CheckDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.lin.domain.Sample">
+		<id column="sampleId" property="sampleId" jdbcType="INTEGER" />
+		<result column="userId" property="userId" jdbcType="CHAR" />
+		<result column="state" property="state" jdbcType="INTEGER" />
+		<result column="date" property="date" jdbcType="TIMESTAMP" />
+		<result column="SJM" property="SJM" jdbcType="CHAR" />
+		<result column="CKMC" property="CKMC" jdbcType="CHAR" />
+		<result column="OccurDate" property="OccurDate" jdbcType="TIMESTAMP" />
+		<result column="DepName" property="DepName" jdbcType="CHAR" />
+		<result column="HW" property="HW" jdbcType="CHAR" />
+		<result column="YS" property="YS" jdbcType="CHAR" />
+		<result column="SL" property="SL" jdbcType="DECIMAL" />
+		<result column="HWSL" property="HWSL" jdbcType="DECIMAL" />
+		<result column="GG" property="GG" jdbcType="CHAR" />
+		<result column="MS" property="MS" jdbcType="CHAR" />
+		<result column="KZ" property="KZ" jdbcType="CHAR" />
+		<result column="MD" property="MD" jdbcType="CHAR" />
+		<result column="MF" property="MF" jdbcType="CHAR" />
+		<result column="CFJX" property="CFJX" jdbcType="CHAR" />
+		<result column="CF" property="CF" jdbcType="CHAR" />
+		<result column="ZXPBCB" property="ZXPBCB" jdbcType="CHAR" />
+		<result column="ZXMLCB" property="ZXMLCB" jdbcType="CHAR" />
+		<result column="ZXRSCB" property="ZXRSCB" jdbcType="CHAR" />
+		<result column="YGSL" property="YGSL" jdbcType="CHAR" />
+		<result column="BKZW" property="BKZW" jdbcType="CHAR" />
+		<result column="HKWZ" property="HKWZ" jdbcType="CHAR" />
+		<result column="JG" property="JG" jdbcType="CHAR" />
+		<result column="BZ" property="BZ" jdbcType="CHAR" />
+		<result column="LYM" property="LYM" jdbcType="CHAR" />
+		<result column="GYSMC" property="GYSMC" jdbcType="CHAR" />
+	</resultMap>
+	<!-- 查询样品列表 -->
+	<select id="listSample" parameterType="com.lin.domain.Sample"
+		resultMap="BaseResultMap">
+		DECLARE @r AS INT
+		SET @r = #{rows}
+		DECLARE @p AS INT
+		SET @p
+		=#{page}
+		SELECT
+		TOP (@r) *
+		FROM
+		Sample
+		WHERE userId=#{userId,jdbcType=CHAR}
+		and state=0
+		and sampleId NOT IN (
+		SELECT top
+		((@r) *((@p) - 1)) sampleId
+		FROM
+		Sample
+		WHERE
+		userId=#{userId,jdbcType=CHAR} and state=0
+		)
+	</select>
+	<select id="countListSample" resultType="int" parameterType="com.lin.domain.Sample">
+		SELECT count(*)
+		FROM sample
+		WHERE
+		userId=#{userId,jdbcType=CHAR} and
+		state=0
+	</select>
+	<select id="selectSampleById" parameterType="com.lin.domain.Product"
+		resultMap="BaseResultMap">
+		SELECT * FROM sample
+		where DjLsh = #{DjLsh,jdbcType=INTEGER}
+		and userId =
+		#{createUser,jdbcType=CHAR}
+	</select>
+	<!-- 查询样品list -->
+	<select id="getListByIds" resultMap="BaseResultMap">
+		select *
+		from Sample s
+		LEFT JOIN JMYPKDAH
+		dah ON s.SJM = dah.SJM
+		LEFT JOIN View_JMYPKDAHFG c on
+		s.SJM = c.SJM
+		LEFT JOIN View_YKKC y ON s.SJM = y.SJM and y.YS=s.YS
+		where s.sampleId in
+		<foreach item="id" index="index" collection="array" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="getCardListByStrings" resultMap="BaseResultMap">
+		select *
+		from Sample s
+		where  s.sampleId in
+		<foreach item="id" index="index" collection="array" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<select id="getListByStrings" resultMap="BaseResultMap">
+		SELECT
+		*, b.SL,
+		c.LYM AS LYM,
+		c.GYSMC AS GYSMC
+		FROM
+		JMYPKDAH a
+		LEFT JOIN
+		(SELECT
+		SJM,
+		CKMC,
+		SUM(SL) AS SL,
+		stuff(
+		(
+		SELECT
+		DISTINCT(',' + HW)
+		FROM
+		View_YPKCMXF
+		WHERE
+		c.CKMC = CKMC AND c.SJM=SJM FOR xml path ('')
+		),
+		1,
+		1,
+		''
+		) AS HW,
+		stuff(
+		(
+		SELECT
+		DISTINCT(',' + DepName)
+		FROM
+		View_YPKCMXF
+		WHERE
+		c.CKMC = CKMC AND c.SJM=SJM FOR xml path ('')
+		),
+		1,
+		1,
+		''
+		) AS DepName,
+		stuff(
+		(
+		SELECT
+		DISTINCT(',' + YS)
+		FROM
+		View_YPKCMXF
+		WHERE
+		c.CKMC = CKMC AND
+		c.SJM=SJM FOR xml path ('')
+		),
+		1,
+		1,
+		''
+		) AS YS
+		FROM
+		View_YPKCMXF c
+		GROUP BY
+		c.CKMC,c.SJM) b ON a.SJM = b.SJM
+		LEFT JOIN View_JMYPKDAHFG c ON a.SJM =
+		c.SJM
+		WHERE a.SJM in
+		<foreach item="id" index="index" collection="array" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+		ORDER BY CKMC DESC
+	</select>
+	<select id="getListPByStrings" resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		View_JMYPKDAHFG
+		where SJM in
+		<foreach item="id" index="index" collection="array" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</select>
+	<update id="deleteSample" parameterType="java.lang.Integer">
+		update Sample
+		set state=-1
+		where sampleId in
+		<foreach item="id" index="index" collection="array" open="("
+			separator="," close=")">
+			#{id}
+		</foreach>
+	</update>
+	<update id="updateSample" parameterType="com.lin.domain.Sample">
+		update Sample
+		set state=#{state}
+		where sampleId = #{sampleId}
+	</update>
+	<select id="getMaxCardHId" resultType="java.lang.Integer">
+		DECLARE @id INT
+		EXEC
+		SP_GetDjlsh
+		'YKCKD',@id Output
+		SELECT @id
+	</select>
+	<select id="getMaxDocumentsCode" parameterType="string"
+		resultType="java.lang.Integer">
+		SELECT ZHDJH
+		from DJHH
+		WHERE DJM='YKCKD' and ND=#{nd} and YF
+		=#{yf}
+	</select>
+	<update id="updateMaxDJH" parameterType="string">
+		update DJHH set
+		ZHDJH=ZHDJH+1
+		WHERE DJM='YKCKD' and ND=#{nd} and YF =#{yf}
+	</update>
+	<insert id="saveCardB" parameterType="com.lin.domain.CardB">
+		insert into YKCKDB
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="DjLsh != null">
+				DjLsh,
+			</if>
+			<if test="DjBth != null">
+				DjBth,
+			</if>
+			<if test="HH != null">
+				HH,
+			</if>
+			<if test="XH != null">
+				XH,
+			</if>
+			<if test="HPHM != null">
+				HPHM,
+			</if>
+			<if test="SJM != null">
+				SJM,
+			</if>
+			<if test="YS != null">
+				YS,
+			</if>
+			<if test="DQKC != null">
+				DQKC,
+			</if>
+			<if test="HW != null">
+				HW,
+			</if>
+			<if test="CKSL != null">
+				CKSL,
+			</if>
+			<if test="DJ != null">
+				DJ,
+			</if>
+			<if test="JE != null">
+				JE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="DjLsh != null">
+				#{DjLsh,jdbcType=INTEGER},
+			</if>
+			<if test="DjBth != null">
+				#{DjBth,jdbcType=INTEGER},
+			</if>
+			<if test="HH != null">
+				#{HH,jdbcType=INTEGER},
+			</if>
+			<if test="XH != null">
+				#{XH,jdbcType=INTEGER},
+			</if>
+			<if test="HPHM != null">
+				#{HPHM,jdbcType=CHAR},
+			</if>
+			<if test="SJM != null">
+				#{SJM,jdbcType=CHAR},
+			</if>
+			<if test="YS != null">
+				#{YS,jdbcType=CHAR},
+			</if>
+			<if test="DQKC != null">
+				#{DQKC,jdbcType=INTEGER},
+			</if>
+			<if test="HW != null">
+				#{HW,jdbcType=CHAR},
+			</if>
+			<if test="CKSL != null">
+				#{CKSL,jdbcType=INTEGER},
+			</if>
+			<if test="DJ != null">
+				#{DJ,jdbcType=DECIMAL},
+			</if>
+			<if test="JE != null">
+				#{JE,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+
+	<insert id="saveCardH" parameterType="com.lin.domain.CardH">
+		insert into YKCKDH
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="DjLsh != null">
+				DjLsh,
+			</if>
+			<if test="DJH != null">
+				DJH,
+			</if>
+			<if test="DJLY != null">
+				DJLY,
+			</if>
+			<if test="YDJH != null">
+				YDJH,
+			</if>
+			<if test="CKLX != null">
+				CKLX,
+			</if>
+			<if test="DJFX != null">
+				DJFX,
+			</if>
+			<if test="SRRQ != null">
+				SRRQ,
+			</if>
+			<if test="CompanyCode != null">
+				CompanyCode,
+			</if>
+			<if test="CompanyName != null">
+				CompanyName,
+			</if>
+			<if test="OrgCode != null">
+				OrgCode,
+			</if>
+			<if test="OrgName != null">
+				OrgName,
+			</if>
+			<if test="DepartmentCode != null">
+				DepartmentCode,
+			</if>
+			<if test="DepartmentName != null">
+				DepartmentName,
+			</if>
+			<if test="ZDR != null">
+				ZDR,
+			</if>
+			<if test="ZDRID != null">
+				ZDRID,
+			</if>
+			<if test="ZDRQ != null">
+				ZDRQ,
+			</if>
+			<if test="CKH != null">
+				CKH,
+			</if>
+			<if test="CKMC != null">
+				CKMC,
+			</if>
+			<if test="YKYS != null">
+				YKYS,
+			</if>
+			<if test="HJSL != null">
+				HJSL,
+			</if>
+			<if test="HJJE != null">
+				HJJE,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="DjLsh != null">
+				#{DjLsh,jdbcType=INTEGER},
+			</if>
+			<if test="DJH != null">
+				#{DJH,jdbcType=CHAR},
+			</if>
+			<if test="DJLY != null">
+				#{DJLY,jdbcType=CHAR},
+			</if>
+			<if test="YDJH != null">
+				#{YDJH,jdbcType=CHAR},
+			</if>
+			<if test="CKLX != null">
+				#{CKLX,jdbcType=CHAR},
+			</if>
+			<if test="DJFX != null">
+				#{DJFX,jdbcType=CHAR},
+			</if>
+			<if test="SRRQ != null">
+				#{SRRQ,jdbcType=TIMESTAMP},
+			</if>
+			<if test="CompanyCode != null">
+				#{CompanyCode,jdbcType=CHAR},
+			</if>
+			<if test="CompanyName != null">
+				#{CompanyName,jdbcType=CHAR},
+			</if>
+			<if test="OrgCode != null">
+				#{OrgCode,jdbcType=CHAR},
+			</if>
+			<if test="OrgName != null">
+				#{OrgName,jdbcType=CHAR},
+			</if>
+			<if test="DepartmentCode != null">
+				#{DepartmentCode,jdbcType=CHAR},
+			</if>
+			<if test="DepartmentName != null">
+				#{DepartmentName,jdbcType=CHAR},
+			</if>
+			<if test="ZDR != null">
+				#{ZDR,jdbcType=CHAR},
+			</if>
+			<if test="ZDRID != null">
+				#{ZDRID,jdbcType=CHAR},
+			</if>
+			<if test="ZDRQ != null">
+				#{ZDRQ,jdbcType=TIMESTAMP},
+			</if>
+			<if test="CKH != null">
+				#{CKH,jdbcType=CHAR},
+			</if>
+			<if test="CKMC != null">
+				#{CKMC,jdbcType=CHAR},
+			</if>
+			<if test="YKYS != null">
+				#{YKYS,jdbcType=CHAR},
+			</if>
+			<if test="HJSL != null">
+				#{HJSL,jdbcType=DECIMAL},
+			</if>
+			<if test="HJJE != null">
+				#{HJJE,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+</mapper> 

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>- 选样列表</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+<link rel="stylesheet" type="text/css"
+	href="../public/css/candy-box.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/animate.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/jquery.skippr.css" />
+<link rel="stylesheet" type="text/css" href="../public/css/xysstyle.css" />
+<!-- Toastr script -->
+<link href="../public/css/plugins/toastr/toastr.min.css"
+	rel="stylesheet">
+<link href="../public/css/easyui.css" rel="stylesheet">
+<link href="../public/css/paging.css" rel="stylesheet">
+<link href="../public/css/animate.css" rel="stylesheet">
+<style>
+/* Additional style to fix warning dialog position */
+#alertmod_table_list_2 {
+	top: 900px !important;
+}
+
+ul {
+	list-style: none;
+	-webkit-padding-start: 15px;
+	-webkit-padding-end: 15px;
+}
+</style>
+
+</head>
+
+<body class="gray-bg" style="width: 100%">
+	<header>
+		<nav class="navbar navbar-default">
+			<div class="container-fluid" style="position: relative;">
+				<div class="fcenter" style="position: relative">
+					<img src="../public/img/富丽达.svg"
+						style="width: 82px; position: absolute; top: 50px; left: 0; bottom: 0; right: 0; margin: auto;">
+					<div class="navbar-header"
+						style="position: absolute; top: 0; right: 0;">
+						<button type="button" class="navbar-toggle collapsed"
+							data-toggle="collapse"
+							data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+							<span class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+					</div>
+				</div>
+				<div class="collapse navbar-collapse navbar-right"
+					id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li><a href="plate.html">首页</a></li>
+						<li><a id="ipt" href="clothing.html">样衣</a>
+							<ul id="ul"
+								style="background: #fff; z-index: 999; position: absolute;">
+								<li><a href="clothing.html?type=m">男装</a></li>
+								<li><a href="clothing.html?type=w">女装</a></li>
+							</ul></li>
+						<li><a href="sampleList.html">面料</a></li>
+						<li><a href="checkList.html">选样</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+	<section class="hiview">
+		<div class="container">
+			<div class="hiview-header"></div>
+			<div class="row">
+				<div class="ibox ">
+					<div id="toolbar" class="toolbar">
+						<button class="btn btn-white" id="importCheck"><i class="glyphicon glyphicon-export"></i>导出选中</button> <button class="btn btn-white"
+							id="importall"><i class="glyphicon glyphicon-export"></i>导出全部</button> <button class="btn btn-white"
+							id="delete"><i class="glyphicon glyphicon-delete"></i>删   除</button> <button class="btn btn-white"
+							id="deleteAll"><i class="glyphicon glyphicon-delete"></i>全部删除</button>
+							<!--  <a
+							id="submitAll"><i class="glyphicon glyphicon-delete"
+							style="margin-bottom: 10px; margin-right: 5px;"></i>提交</a> -->
+
+					</div>
+					<div align="center">
+						<div class="ibox-body">
+							<table class="easyui-datagrid" id="sampledatagrid">
+								<thead>
+									<tr>
+										<th data-options="field:'ck',checkbox:true"></th>
+										<th data-options="field:'SJM',width:80,align:'center'">随机码</th>
+										<th
+											data-options="field:'date',width:80,formatter:TimeFormatter,align:'center'">选样日期</th>
+										<th data-options="field:'CKMC',width:80,align:'center'">仓库名称</th>
+										<th
+											data-options="field:'OccurDate',width:80,formatter:TimeFormatter,align:'center'">入库日期</th>
+										<th data-options="field:'DepName',width:80,align:'center'">部门</th>
+										<th data-options="field:'HW',width:80,align:'center'">货位</th>
+										<th data-options="field:'YS',width:80,align:'center'">颜色</th>
+										<th data-options="field:'SL',width:80,align:'center'">数量</th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+	<div class="modal inmodal" id="positionModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-body" style="text-align:center">
+					<ul id="position">
+						<button class="btn btn-white" id = "importAll">全部信息导出</button>
+						<button class="btn btn-white" id = "imporyCard">样卡信息导出</button>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 全局js -->
+	<script src="../public/js/jquery.min.js?v=2.1.4"></script>
+	<script src="../public/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+	<!-- Peity -->
+	<script src="../public/js/plugins/peity/jquery.peity.min.js"></script>
+
+	<!-- Toastr script -->
+	<script src="../public/js/plugins/toastr/toastr.min.js"></script>
+
+	<!-- easyui -->
+	<script src="../public/js/jquery.easyui.min.js"></script>
+
+	<!-- 自定义js -->
+	<script src="../public/js/content.js?v=1.0.0"></script>
+	<!-- iCheck -->
+	<script src="../public/js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../public/myJs/checkList.js"></script>
+	<script src="../public/js/common.js"></script>
+	<script type="text/javascript" src="../public/js/xys/main.js"></script>
+	<!-- 按键响应js -->
+	<script src="../public/js/keyboard.js"></script>
+
+
+
+
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Imitative WIN8 WEB UI</title>
+<link href="../public/css/s1.css" rel="stylesheet" type="text/css" />
+<link href="../public/css/st.css" rel="stylesheet" type="text/css">
+<link href="../public/css/flexslider.css" rel="stylesheet"
+	type="text/css">
+</head>
+<body>
+
+
+	<div class="wrapper">
+		<div class="header"></div>
+		<div class="container">
+			<div class="boxgridSet">
+
+				<div class="box right">
+					<div id="slider" class="flexslider ">
+						<!-- 固定写法 -->
+						<ul class="slides" onclick="javascript:window.location.href='/ssm_project/sample/clothing'">
+							<!--<span style="font-family:Arial, Helvetica, sans-serif;">固定写法</span>-->
+							<li class="images"><img src="../public/img/clothing/W16020.jpg" /></li>
+							<li class="images"><img src="../public/img/clothing/W16024.jpg" /></li>
+							<li class="images"><img src="../public/img/clothing/W16026.jpg" /></li>
+						</ul>
+					</div>
+					<marquee width="300px" height="140px" bgcolor="#99FF66" direction="right" scrollamount="10" vspace="50" style="font-size:50px;line-height:140px">富丽达样品网站 </marquee>
+				</div>
+				<div class="box slidedown"
+					onclick="javascript:window.location.href='/ssm_project/sample/sampleList'">
+					<div class="boxgrid ">
+						<span class="title">新品上市</span>
+					</div>
+				</div>
+				<div class="box slideleft"
+					onclick="javascript:window.location.href='/ssm_project/sample/sampleList'">
+					<div class="boxgrid" style="background: #B0EB17">
+						<span class="title">热销产品</span>
+					</div>
+				</div>
+				<div class="box forbid"
+					onclick="javascript:window.location.href='/ssm_project/sample/sampleList'">
+					<div class="boxgrid">
+						<span class="title">面料词库</span>
+					</div>
+				</div>
+				<div class="box slideleft"
+					onclick="javascript:window.location.href='/ssm_project/sample/sampleList'">
+					<div class="boxgrid" style="background: #B0EB17">
+						<span class="title">面料宝藏</span>
+					</div>
+				</div>
+				<div class="box slideright"
+					onclick="javascript:window.location.href='/ssm_project/sample/sampleList'">
+					<span class="title">最新产品</span>
+				</div>
+				<div class="box"
+					onclick="javascript:window.location.href='/ssm_project/sample/sampleList'">
+					<span class="title">销量排行</span>
+				</div>
+
+			</div>
+
+			<div class="clear"></div>
+		</div>
+
+
+		<div class="footer">
+			<div class="footerContent">
+				<font class="footerContentLink"> </font> <br /> <br /> <font>版权所有
+					© 2018 TianFang Science&Technology Development. xxxxxx股份有限公司<br />
+					经营许可证编号：xxx-20090136-1
+				</font>
+			</div>
+		</div>
+
+	</div>
+
+
+	<div id="top"></div>
+
+	<script src="../public/js/jquery.min.js?v=2.1.4"></script>
+	<script src="../public/js/jquery.flexslider.js"></script>
+	<script src="../public/js/jquery.flexslider-min.js"></script>
+	<script type="text/javascript">
+		$('#slider').flexslider({
+			animation : "solid", //动画效果  
+			animationLoop : true, //是否循环播放  
+			controlNav : true,
+			directionNav : false,
+			startAt : 0, // Integer: 开始播放的 slide，从 0 开始计数  
+			slideshow : true, // Boolean: 是否自动播放  
+			slideshowSpeed : 3000, // Integer: ms 滚动间隔时间  
+			animationSpeed : 600, // Integer: ms 动画滚动速度  
+			direction : "horizontal", // String: 滚动方向 ["horizontal"|"vertical"]  
+		/*prevText: ' <img src="../../common/img/prev.png">', // String: 上一个按钮文字（），  
+		nextText: '<img src="../../common/img/next.png">', */// String: 下一个按钮文字  
+		})
+	</script>
+</body>
+
+
+</html>

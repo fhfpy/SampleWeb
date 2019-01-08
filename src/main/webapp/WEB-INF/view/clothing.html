@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>样衣列表</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<link rel="stylesheet" type="text/css"
+	href="../public/css/candy-box.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/animate.min.css" />
+<link rel="stylesheet" type="text/css"
+	href="../public/css/jquery.skippr.css" />
+<link rel="stylesheet" type="text/css" href="../public/css/xysstyle.css" />
+<!-- Toastr script -->
+<link href="../public/css/plugins/toastr/toastr.min.css"
+	rel="stylesheet">
+<link href="../public/css/easyui.css" rel="stylesheet">
+<link href="../public/css/paging.css" rel="stylesheet">
+<link href="../public/css/animate.css" rel="stylesheet">
+<style type="text/css">
+.textbox {
+	border: none
+}
+
+ul {
+	list-style:none;   
+	-webkit-padding-start: 15px;
+	-webkit-padding-end: 15px;
+	}
+</style>
+
+</head>
+
+<body class="gray-bg">
+	<header>
+		<nav class="navbar navbar-default">
+		<div class="container-fluid" style="position:relative;">
+			<div class="fcenter" style="position:relative">
+				<img src="../public/img/富丽达.svg" style="width: 82px;position:absolute;top: 50px; left: 0; bottom: 0; right: 0;margin: auto;">
+				<div class="navbar-header" style="position:absolute;top:0;right:0;">
+					<button type="button" class="navbar-toggle collapsed"
+						data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"
+						aria-expanded="false">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+				</div>
+			</div>
+			<div class="collapse navbar-collapse navbar-right"
+				id="bs-example-navbar-collapse-1">
+				<ul class="nav navbar-nav">
+					<li>   </li>
+					<li><a href="plate.html">首页</a></li>
+					<li>
+					<a id="ipt" href="clothing.html">样衣</a>
+						<ul id="ul" style="background: #fff; z-index: 999; position: absolute;">
+								<li><a href="clothing.html?type=m">男装</a></li>
+								<li><a href="clothing.html?type=w">女装</a></li>
+							</ul>
+					</li>
+					<li><a href="sampleList.html">面料</a></li>
+					<li><a href="checkList.html">选样</a></li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	</header>
+	<section class="hiview">
+		<div class="container">
+			<div class="hiview-header"></div>
+			<div class="row">
+				<div class="col-sm-12">
+					<div class="ibox ">
+						<div class="ibox-content">
+							<form role="form" class="form-horizontal m-t">
+								<div class="form-group">
+									<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">样衣编号</label>
+									<div class="col-sm-1 col-xs-7">
+										<input id="clothingCode" type="text"
+											data-options="prompt:'请输入样衣编号'"
+											class="easyui-textbox form-control">
+									</div>
+									<label class="col-sm-1 col-xs-4 col-xs-offset-1 control-label">面料编号</label>
+									<div class="col-sm-1 col-xs-7">
+										<input id="SJM" type="text" data-options="prompt:'请输入面料编号'"
+											class="easyui-textbox form-control">
+									</div>
+									<div class="col-sm-2 col-xs-6 col-xs-offset-1">
+										<button type="button" class="btn btn-white" id="btn-search">查询</button>
+										<button type="button" class="btn btn-white" id="btn-clear">清空</button>
+										<button type="button" class="btn btn-white" id="import">导入</button>
+									</div>
+								</div>
+							</form>
+							<form role="form" class="form-horizontal m-t" id="clothingList"
+								style="width: 80%; margin: 0 auto"></form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="page" class="page_div"></div>
+	</section>
+	<div class="modal inmodal" id="importModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header" style="background-color: #F5F5DC">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h6 class="modal-title">样衣excel导入</h6>
+				</div>
+				<div class="modal-body" style="background-color: #E0E0E0">
+					<form id="uploadForm" name="uploadForm"
+						enctype="multipart/form-data" style="margin-left: 200px">
+						<input type="file" name="file">
+						<button class="btn" type="button" id="doSave">提交</button>
+					</form>
+				</div>
+				<!-- <div class="modal-header" style="background-color: #F5F5DC">
+					<h6 class="modal-title">样衣压缩图导入</h6>
+				</div>
+				<div class="modal-body" style="background-color: #E0E0E0">
+					<form id="uploadPicForm" name="uploadPicForm"
+						enctype="multipart/form-data" style="margin-left: 200px">
+						<input type="file" name="file">
+						<button class="btn" type="button" id="doPicSave">提交</button>
+					</form>
+				</div> -->
+				<div class="modal-header" style="background-color: #F5F5DC">
+					<h6 class="modal-title">样衣图片导入</h6>
+				</div>
+				<div class="modal-body" style="background-color: #E0E0E0">
+					<form id="uploadPicBigForm" name="uploadPicBigForm"
+						enctype="multipart/form-data" style="margin-left: 200px">
+						<input type="file" name="file">
+						<button class="btn" type="button" id="doPicBigSave">提交</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal inmodal" id="importPicModal" tabindex="-1"
+		role="dialog" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h6 class="modal-title">样衣图片导入</h6>
+				</div>
+				<div class="modal-body">
+					<form id="uploadPicForm" name="uploadPicForm"
+						enctype="multipart/form-data" style="margin-left: 200px">
+						<input type="file" name="file">
+						<button class="btn" type="button" id="doPicSave">提交</button>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<!-- 全局js -->
+	<script src="../public/js/jquery.min.js?v=2.1.4"></script>
+	<script src="../public/js/jquery-ui-1.10.4.min.js"></script>
+	<script src="../public/js/jquery.form.js"></script>
+
+
+	<script src="../public/js/bootstrap.min.js?v=3.3.6"></script>
+
+
+
+	<!-- Peity -->
+	<script src="../public/js/plugins/peity/jquery.peity.min.js"></script>
+
+	<!-- easyui DataGrid -->
+	<script src="../public/js/jquery.easyui.min.js"></script>
+
+	<!-- Toastr script -->
+	<script src="../public/js/plugins/toastr/toastr.min.js"></script>
+
+	<!-- 自定义js -->
+	<script src="../public/js/content.js?v=1.0.0"></script>
+
+	<script src="../public/js/paging.js"></script>
+
+	<script src="../public/js/common.js"></script>
+	<script src="../public/myJs/clothing.js"></script>
+
+
+
+
+</body>
+
+</html>

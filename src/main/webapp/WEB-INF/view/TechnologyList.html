@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<!--
+	作者：fenghaifeng
+	时间：2017-11-21
+	描述：主页
+-->
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>工艺单列表</title>
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+<link rel="shortcut icon" href="../public/favicon.ico">
+<link href="../public/css/bootstrap.min.css?v=3.3.6" rel="stylesheet">
+<link href="../public/css/font-awesome.css?v=4.4.0" rel="stylesheet">
+<link href="../public/css/animate.css" rel="stylesheet">
+<link href="../public/css/plugins/summernote/summernote.css"
+	rel="stylesheet">
+<link href="../public/css/plugins/summernote/summernote-bs3.css"
+	rel="stylesheet">
+<link href="../public/css/style.css?v=4.1.0" rel="stylesheet">
+<link href="../public/css/plugins/toastr/toastr.min.css"
+	rel="stylesheet">
+
+<!-- jqgrid-->
+<link rel="stylesheet" href="../public/css/easyui.css" />
+<link rel="stylesheet" href="../public/myCss/common.css" />
+
+<style>
+/* table{letter-spacing:20px;} */
+</style>
+
+</head>
+
+<body class="gray-bg">
+	<div class="wrapper wrapper-content animated fadeInRight">
+		<div class="row">
+			<div class="col-sm-12">
+				<div class="ibox float-e-margins">
+					<div class="ibox-title">
+						<h5>工艺单列表</h5>
+					</div>
+					<div class="ibox-content">
+						<div class="form-horizontal">
+							<label class="col-sm-2 control-label">品号</label>
+							<div class="col-sm-1">
+								<input type="text" id="PBMC" data-options="prompt:'请输入品号'"
+									class="form-control easyui-textbox" required="required">
+							</div>
+							<div class="col-sm-1">
+								<input type="text" id="WPMC" data-options="prompt:'请输入原料'"
+									class="form-control easyui-textbox" required="required">
+							</div>
+							<div class="col-sm-1">
+								<input type="text" id="memo" data-options="prompt:'请输入备注'"
+									class="form-control easyui-textbox" required="required">
+							</div>
+							<button id="search" class="btn btn-primary " type="button">查询</button>　
+							<button id="create" class="btn btn-primary " type="button">新建</button>　
+							<button id="edit" class="btn btn-primary " type="button">修改</button>　
+							<button id="print" class="btn btn-primary " type="button">打印</button>　
+							<div class="hr-line-dashed"></div>
+							<div class="form-group">
+								<div class="col-sm-4 col-sm-offset-2">
+									<table class="easyui-datagrid" id="technologyid">
+										<thead>
+											<tr>
+												<th data-options="field:'pbmc',width:100">品号</th>
+											</tr>
+										</thead>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal inmodal" id="checkModal" tabindex="-1" role="dialog"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content animated bounceInRight">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">
+						<span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+					</button>
+					<h6 class="modal-title">穿中顺序</h6>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script>
+		function iframePrint() { //添加打印事件
+			window.print();
+		}
+	</script>
+	<script src="../public/js/jquery.min.js?v=2.1.4"></script>
+
+	<script src="../public/js/bootstrap.min.js?v=3.3.6"></script>
+
+	<!-- Peity -->
+	<script src="../public/js/plugins/peity/jquery.peity.min.js"></script>
+
+	<!-- Toastr script -->
+	<script src="../public/js/plugins/toastr/toastr.min.js"></script>
+
+	<!-- easyui -->
+	<script src="../public/js/jquery.easyui.min.js"></script>
+
+	<!-- 自定义js -->
+	<script src="../public/js/content.js?v=1.0.0"></script>
+
+	<!-- iCheck -->
+	<script src="../public/js/plugins/iCheck/icheck.min.js"></script>
+	<script src="../public/js/common.js"></script>
+
+
+	<script src="../public/myJs/TechnologyList.js"></script>
+
+</body>
+
+</html>

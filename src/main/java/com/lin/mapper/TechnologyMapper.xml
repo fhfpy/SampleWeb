@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>    
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"    
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.dao.TechnologyDao">
+	<!--设置domain类和数据库中表的字段一一对应，注意数据库字段和domain类中的字段名称不致，此处一定要！ -->
+	<resultMap id="BaseResultMap" type="com.lin.domain.TechnologyDetail">
+		<id column="DjLsh" property="DjLsh" jdbcType="INTEGER" />
+		<result column="DocCode" property="DocCode" jdbcType="CHAR" />
+		<result column="K" property="K" jdbcType="CHAR" />
+		<result column="KF" property="KF" jdbcType="DECIMAL" />
+		<result column="JZ" property="JZ" jdbcType="DECIMAL" />
+		<result column="ZJS" property="ZJS" jdbcType="INTEGER" />
+		<result column="NJ" property="NJ" jdbcType="INTEGER" />
+		<result column="NGZ" property="NGZ" jdbcType="INTEGER" />
+		<result column="NZK" property="NZK" jdbcType="INTEGER" />
+		<result column="WGZ" property="WGZ" jdbcType="INTEGER" />
+		<result column="WZK" property="WZK" jdbcType="INTEGER" />
+		<result column="BJGS" property="BJGS" jdbcType="DECIMAL" />
+		<result column="BJG" property="BJG" jdbcType="INTEGER" />
+		<result column="BJJ" property="BJJ" jdbcType="CHAR" />
+		<result column="SJWM" property="SJWM" jdbcType="DECIMAL" />
+		<result column="DjBth" property="DjBth" jdbcType="INTEGER" />
+		<result column="JWFL" property="JWFL" jdbcType="CHAR" />
+		<result column="JWSX" property="JWSX" jdbcType="CHAR" />
+		<result column="WPMC" property="WPMC" jdbcType="CHAR" />
+		<result column="ND" property="ND" jdbcType="CHAR" />
+		<result column="NX" property="NX" jdbcType="CHAR" />
+		<result column="memo" property="memo" jdbcType="CHAR" />
+		<result column="YL" property="YL" jdbcType="DECIMAL" />
+		<result column="Price" property="Price" jdbcType="DECIMAL" />
+		<result column="Amount" property="Amount" jdbcType="DECIMAL" />
+		<result column="BMEMO" property="BMEMO" jdbcType="CHAR" />
+	</resultMap>
+	<sql id="Search_listTechnology_Info">
+		<if test="PBMC != null and PBMC !=''">
+			and PBMC =#{PBMC,jdbcType=VARCHAR}
+		</if>
+		<if test="memo != null and memo !=''">
+			and memo like '%'+#{memo,jdbcType=VARCHAR}+'%'
+		</if>
+		<if test="WPMC != null and WPMC !=''">
+			and WPMC like '%'+#{WPMC,jdbcType=VARCHAR}+'%'
+		</if>
+	</sql>
+	<select id="listTechnology" parameterType="com.lin.domain.TechnologyDetail"
+		resultMap="BaseResultMap">
+		SELECT
+		DISTINCT(h.PBMC)
+		FROM
+		PbgydH h
+		LEFT JOIN PbgydB b ON h.DjLsh =
+		b.DjLsh
+		WHERE
+		1 = 1
+		<include refid="Search_listTechnology_Info" />
+	</select>
+	<select id="listTechnologyByPBMC" parameterType="com.lin.domain.TechnologyDetail"
+		resultMap="BaseResultMap">
+		SELECT
+		*
+		FROM
+		PbgydH h
+		LEFT JOIN PbgydB b ON h.DjLsh = b.DjLsh
+		WHERE
+		PBMC = #{PBMC}
+	</select>
+	<select id="getTechnologyByName" parameterType="com.lin.domain.TechnologyDetail"
+		resultMap="BaseResultMap">
+		SELECT
+		top 1 *
+		FROM
+		PbgydH
+		WHERE
+		PBMC = #{PBMC}
+	</select>
+	<select id="getPyxxkByName" parameterType="com.lin.domain.TechnologyDetail"
+		resultMap="BaseResultMap">
+		SELECT
+		LYM as PBMC
+		FROM
+		YPXXKH
+		WHERE
+		LYM = #{PBMC}
+	</select>
+	<select id="listPBMC" resultMap="BaseResultMap">
+		SELECT
+		y.DjLsh,
+		y.LYM AS PBMC
+		FROM
+		YPXXKH y
+		LEFT JOIN PbgydH p ON y.LYM = p.PBMC
+		WHERE p.PBMC IS NULL and
+		y.LYM LIKE 'M%'
+	</select>
+	<select id="listSX" resultMap="BaseResultMap">
+		SELECT DISTINCT Name as sx ,DjLsh
+		FROM Pub_YarnH
+	</select>
+	<select id="getUtdById" parameterType="com.lin.domain.User"
+		resultMap="BaseResultMap">
+		SELECT
+		CompanyCode,CompanyName,InternalDepartmentCode as
+		OrgCode,InternalDepartmentName as OrgName
+		FROM
+		YGDAH
+		WHERE
+		GH = #{UserID}
+	</select>
+	<select id="getMaxId" resultType="java.lang.Integer">
+		DECLARE @id INT
+		EXEC SP_GetDjlsh
+		'Pbgyd',@id Output
+		SELECT @id
+	</select>
+	<select id="getYpxxkMaxId" resultType="java.lang.Integer">
+		DECLARE @id INT
+		EXEC
+		SP_GetDjlsh
+		'YPXXK',@id Output
+		SELECT @id
+	</select>
+	<select id="getHphmStart" parameterType="string" resultType="java.lang.String">
+		SELECT HPHM
+		from YPXXKH
+		WHERE HPHM=#{hphm}
+	</select>
+	<select id="getMaxHphm" resultType="java.lang.String">
+		SELECT
+		convert(varchar(10),convert(int,MAX(HPHM))+1) FROM YPXXKH
+	</select>
+	<select id="getMaxDocumentsCode" parameterType="string"
+		resultType="java.lang.Integer">
+		SELECT ZHDJH
+		from DJHH
+		WHERE DJM='Pbgyd' and ND=#{nd} and YF
+		=#{yf}
+	</select>
+	<update id="updateMaxDJH" parameterType="string">
+		update DJHH set
+		ZHDJH=ZHDJH+1
+		WHERE DJM='Pbgyd' and ND=#{nd} and YF =#{yf}
+	</update>
+	<delete id="deleteDetali" parameterType="com.lin.domain.TechnologyDetail">
+		DELETE from PbgydB where
+		DjLsh=#{DjLsh}
+	</delete>
+	<insert id="saveYpxxk">
+		insert into YPXXKH(DjLsh,HPHM,LYM,XS,ZZB,DALB,SFZZ,DALY,JDRID,JDR,JDRQ) values(#{DjLsh},#{HPHM},#{LYM},1,0,'临时档案 ',0,'系统生成',#{JDRID},#{JDR},#{JDRQ})
+	</insert>
+	<insert id="insertTechnology" parameterType="com.lin.domain.TechnologyDetail">
+		insert into
+		PbgydH(DjLsh,DocumentsCode,DocState,OccurDate,SourceType,CompanyCode,CompanyName,OrgCode,OrgName,DABH,PBMF,PBWM,PBJM,MZ,ProducerId,Producer,ProduceTime,PBMC,
+		K,KF,JZ,ZJS,NJ,BJG,BJJ,NGZ,NZK,WGZ,WZK,SJWM,CZSX,JSPL,WD,CZSXFY,JSPLFY,WSPLFY,WDFY,memo)
+		values(#{DjLsh},#{DocumentsCode},#{DocState},#{OccurDate},#{SourceType},#{CompanyCode},#{CompanyName},#{OrgCode},#{OrgName},#{DABH},#{PBMF},#{PBWM},#{PBJM},#{MZ},#{ProducerId},#{Producer},#{ProduceTime},#{PBMC},
+		#{K},#{KF},#{JZ},#{ZJS},#{NJ},#{BJG},#{BJJ},#{NGZ},#{NZK},#{WGZ},#{WZK},#{SJWM},#{CZSX},#{JSPL},#{WD},#{CZSXFY},#{JSPLFY},#{WSPLFY},#{WDFY},#{memo})
+	</insert>
+	<insert id="insertTechnologyDetail" parameterType="com.lin.domain.TechnologyDetail">
+		insert into
+		PbgydB(DjLsh, DjBth,BNumber,Line,JWFL,JWSX,WPMC,ND,YL)
+		values(#{DjLsh}, #{DjBth},#{BNumber}, #{Line},#{JWFL},#{JWSX},
+		#{WPMC},#{ND},#{YL})
+	</insert>
+	<update id="updateTechnology" parameterType="com.lin.domain.TechnologyDetail">
+		update PbgydH
+		<set>
+			<if test="K != null and K !=''">
+				K = #{K,jdbcType=VARCHAR},
+			</if>
+			<if test="KF != null and KF !=''">
+				KF = #{KF,jdbcType=VARCHAR},
+			</if>
+			<if test="JZ != null and JZ !=''">
+				JZ = #{JZ,jdbcType=VARCHAR},
+			</if>
+			<if test="ZJS != null and ZJS !=''">
+				ZJS = #{ZJS,jdbcType=INTEGER},
+			</if>
+			<if test="NJ != null and NJ !=''">
+				NJ = #{NJ,jdbcType=INTEGER},
+			</if>
+			<if test="BJG != null and BJG !=''">
+				BJG = #{BJG,jdbcType=INTEGER},
+			</if>
+			<if test="BJJ != null and BJJ !=''">
+				BJJ = #{BJJ,jdbcType=VARCHAR},
+			</if>
+			<if test="NGZ != null and NGZ !=''">
+				NGZ = #{NGZ,jdbcType=VARCHAR},
+			</if>
+			<if test="NZK != null and NZK !=''">
+				NZK = #{NZK,jdbcType=VARCHAR},
+			</if>
+			<if test="WGZ != null and WGZ !=''">
+				WGZ = #{WGZ,jdbcType=VARCHAR},
+			</if>
+			<if test="WZK != null and WZK !=''">
+				WZK = #{WZK,jdbcType=VARCHAR},
+			</if>
+			<if test="SJWM != null and SJWM !=''">
+				SJWM = #{SJWM,jdbcType=VARCHAR},
+			</if>
+			<if test="CZSX != null and CZSX !=''">
+				CZSX = #{CZSX,jdbcType=VARCHAR},
+			</if>
+			<if test="JSPL != null and JSPL !=''">
+				JSPL = #{JSPL,jdbcType=VARCHAR},
+			</if>
+			<if test="WD != null and WD !=''">
+				WD = #{WD,jdbcType=VARCHAR},
+			</if>
+
+			<if test="CZSXFY != null and CZSXFY !=''">
+				CZSXFY = #{CZSXFY,jdbcType=VARCHAR},
+			</if>
+			<if test="JSPLFY != null and JSPLFY !=''">
+				JSPLFY = #{JSPLFY,jdbcType=VARCHAR},
+			</if>
+			<if test="WSPLFY != null and WSPLFY !=''">
+				WSPLFY = #{WSPLFY,jdbcType=VARCHAR},
+			</if>
+			<if test="WDFY != null and WDFY !=''">
+				WDFY = #{WDFY,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null and memo !=''">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where PBMC = #{PBMC}
+	</update>
+</mapper> 
