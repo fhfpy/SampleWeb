@@ -30,9 +30,9 @@
 			and CF like
 			'%'+#{cfbl,jdbcType=VARCHAR}+'%'
 		</if>
-		<if test="cfjq != null and cfjq !=''">
+		<!-- <if test="cfjq != null and cfjq !=''">
 			and CFJX = #{cfjq,jdbcType=VARCHAR}
-		</if>
+		</if> -->
 		<if test="MS != null and MS !=''">
 			and MS like
 			'%'+#{MS,jdbcType=VARCHAR}+'%'
@@ -90,64 +90,34 @@
 	<!-- 查询样品列表 -->
 	<select id="listProduct" parameterType="com.lin.domain.Product"
 		resultMap="BaseResultMap">
-		DECLARE @r AS int
-		SET @r=#{rows}
-		DECLARE @p AS int
-		SET @p=#{page}
-		SELECT
-		*
-		FROM
-		(
-		SELECT
-		*, ROW_NUMBER () OVER (ORDER BY Qty DESC) AS num
+		select *
 		FROM
 		View_JMYPKDAHFG
 		WHERE
 		View_JMYPKDAHFG.xs = 1
 		<include refid="Search_listProduct_Info" />
-		) a
-		WHERE
-		a.num BETWEEN @r*(@p-1) + 1 and @r*@p
 	</select>
 
 	<select id="listProductT" parameterType="com.lin.domain.Product"
 		resultMap="BaseResultMap">
-		DECLARE @r AS int
-		SET @r=#{rows}
-		DECLARE @p AS int
-		SET @p=#{page}
-		SELECT
-		*
-		FROM
-		(
-		SELECT
-		*, ROW_NUMBER () OVER (ORDER BY DjLsh DESC) AS num
+		select *
 		FROM
 		View_JMYPKDAHF
 		WHERE XS=1
 		<include refid="Search_listProduct_Info" />
-		) a
-		WHERE
-		a.num BETWEEN @r*(@p-1) + 1 and @r*@p
 	</select>
-
-	<select id="countProduct" parameterType="com.lin.domain.Product"
-		resultType="int">
-		SELECT count(*)
-		FROM
+	
+	<select id="listCfjq" resultMap="BaseResultMap">
+		select *
+		from 
 		View_JMYPKDAHFG
-		where View_JMYPKDAHFG.xs = 1
-		<include refid="Search_listProduct_Info" />
+		where cfjx in 
+		<foreach collection="arr" item="id" index="index"
+			 open="(" close=")" separator=",">
+		  #{id}
+		</foreach>
 	</select>
-
-	<select id="countProductT" parameterType="com.lin.domain.Product"
-		resultType="int">
-		SELECT count(*)
-		FROM
-		View_JMYPKDAHF
-		where View_JMYPKDAHF.xs = 1
-		<include refid="Search_listProduct_Info" />
-	</select>
+	
 	
 	<select id="listStrPics" resultType="com.lin.domain.Product">
 		SELECT SJM,HKKW FROM JMYPKDAH WHERE XS=1

@@ -61,6 +61,10 @@ public class SampleServiceImpl implements SampleService {
 		return sampleDao.listProductT(product);
 	}
 	
+	public List<Product> listCfjq(String[] arr){
+		return sampleDao.listCfjq(arr);
+	}
+	
 	public String selectSjmByLym(String str) {
 		return sampleDao.selectSjmByLym(str);
 	}

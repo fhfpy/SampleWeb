@@ -46,20 +46,6 @@ public class ToolUnit {
         Class<?> clazz = target.getClass();
         String[] fs = fieldName.split("\\.");
         try {
-            for(int i = 0; i < fs.length - 1; i++) {
-                Field f = clazz.getDeclaredField(fs[i]);
-                f.setAccessible(true);
-                Object val = f.get(target);
-                if(val == null) {
-                    Constructor<?> c = f.getType().getDeclaredConstructor();
-                    c.setAccessible(true);
-                    val = c.newInstance();
-                    f.set(target, val);
-                }
-                target = val;
-                clazz = target.getClass();
-            }
- 
             Field f = clazz.getDeclaredField(fs[fs.length - 1]);
             f.setAccessible(true);
             f.set(target, value);

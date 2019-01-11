@@ -396,10 +396,11 @@ function setClear() {
 		type : 'POST',
 		data : {
 			page : 1,
-			rows : 99999
+			rows : 24
 		},
 		dataType : 'json',
 		success : function(data) {
+			setPage(data);
 			setList(data);
 		},
 		error : function() {

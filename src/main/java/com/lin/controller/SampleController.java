@@ -168,6 +168,8 @@ public class SampleController {
 	    	String ms = product.getMS();
 	    	String cfbl = product.getCfbl();
 	    	String cfjq = product.getCfjq();
+	    	String [] arr3 = null;
+    		String[] array = null;
 	    	List<Product> products =new ArrayList<>();
 	    	List<Product> productlist =new ArrayList<>();
 	    	List<Product> products1 =new ArrayList<>();
@@ -176,9 +178,19 @@ public class SampleController {
 	    	List<Product> productlist1 =new ArrayList<>();
 	    	List<Product> productlist2 =new ArrayList<>();
 	    	List<Product> productlist3 =new ArrayList<>();
-	    	product.setRows(99999);
-    		product.setPage(1);
-	    	if((product.getMS()==null||product.getMS()=="")&&((product.getCF()==null||product.getCF()==""))&&(product.getCfbl()==null||product.getCfbl()=="")&&((product.getCfjq()==null||product.getCfjq()==""))) {
+    		if(product.getCfjq()!=null||product.getCfjq()=="") {
+    			arr3 = product.getCfjq().replace(" ", ",").split(",");
+    			FullArrangement1 fullArrangement1 =new FullArrangement1();
+        		array = fullArrangement1.doFullArrangement(arr3).toArray(new String[0]);
+        		for(int i=0;i<array.length;i++) {
+        			array[i] = array[i].substring(1, array[i].length()-1).replace(", ", " ");
+        		}
+    		}
+    		if(array!=null) {
+    			products3 = sampleService.listCfjq(array);
+    		}
+    		array =null;
+	    	if((product.getMS()==null||product.getMS()=="")&&((product.getCF()==null||product.getCF()==""))&&(product.getCfbl()==null||product.getCfbl()=="")) {
 	    		if(product.getYpmin()!=null||product.getYpmax()!=null||product.getYkmin()!=null||product.getYkmax()!=null||(product.getDepName()!=null&&product.getDepName()!="")) {
 	    			products = sampleService.listProductT(product);
 		    	}
@@ -192,8 +204,6 @@ public class SampleController {
 	    		product.setCfbl("");
 	    		product.setCfjq("");
 	    		String [] arr = product.getMS().replace(" ", ",").split(",");
-	    		product.setRows(99999);
-	    		product.setPage(1);
 	    		if(arr[0]!="") {
 			    	for (String string : arr) {
 			    		product.setMS(string);
@@ -217,8 +227,6 @@ public class SampleController {
 	    		product.setCfbl("");
 	    		product.setCfjq("");
 		    	String [] arr1 = product.getCF().replace(" ", ",").split(",");
-		    	product.setRows(99999);
-		    	product.setPage(1);
 	    		if(arr1[0]!="") {
 			    	for (String string : arr1) {
 			    		product.setCF(string);
@@ -242,8 +250,6 @@ public class SampleController {
 	    		product.setCfbl(cfbl);
 	    		product.setCfjq("");
 		    	String [] arr2 = product.getCfbl().replace(" ", ",").split(",");
-		    	product.setRows(99999);
-		    	product.setPage(1);
 	    		if(arr2[0]!="") {
 			    	for (String string : arr2) {
 			    		product.setCfbl(string);
@@ -263,7 +269,7 @@ public class SampleController {
 					}
 	    		}
 	    		
-	    		product.setCfjq(cfjq);
+	    		/*product.setCfjq(cfjq);
 	    		product.setMS("");
 	    		product.setCF("");
 	    		product.setCfbl("");
@@ -283,11 +289,11 @@ public class SampleController {
 						}
 						products3.addAll(productlist3);
 					}
-	    		}
-	    		products = retainList(products,products1);
-	    		products = retainList(products,products2);
-	    		products = retainList(products,products3);
+	    		}*/
 	    	}
+	    	products = retainList(products,products1);
+    		products = retainList(products,products2);
+    		products = retainList(products,products3);
 	    	Common.removeDuplicate(products);
 	    	String allSJM = "";
 	    	int count =products.size();
@@ -302,7 +308,7 @@ public class SampleController {
 	    			products = products.subList((page - 1) * rows, page* rows);
 	    		}
 	    	}
-			map.put("rows",products);
+	    	map.put("rows",products);
 			if(allSJM!="") {
 				map.put("allSJM",allSJM.substring(1, allSJM.length()));
 			}
@@ -321,12 +327,15 @@ public class SampleController {
 	    		p1.retainAll(p2);
 	    		p=p1;
 	    	}
-	    	if(p1.size()>0&&p2.size()==0) {
+	    	else if(p1.size()>0&&p2.size()==0) {
 	    		p=p1;
 	    	}
-	    	if(p1.size()==0&&p2.size()>0) {
+	    	else if(p1.size()==0&&p2.size()>0) {
 	    		p=p2;
 	    	}
+	    	else {
+	    		
+			}
 	    	return p;
 	    }
 	    /**
@@ -951,9 +960,13 @@ public class SampleController {
 		public Map<String, Object> jmyppic(HttpServletRequest request) throws Exception{
 	    	Map<String, Object> map = new ConcurrentHashMap<>();
 	    	
-	    	Object count = request.getSession().getServletContext().getAttribute("Count");
+	    	/*Object count = request.getSession().getServletContext().getAttribute("Count");
 	    	
 	    	Object maxCount = request.getSession().getServletContext().getAttribute("MaxCount");
+	    	
+	    	map.put("count", count.toString());
+	    	map.put("maxCount", maxCount.toString());*/
+	    	/*
 	    	
 	    	CardB cardB = new CardB();
 	    	cardB.CF = "123";
@@ -1068,7 +1081,7 @@ public class SampleController {
 	    	MyRun mr2 = MyRun.clone(mr1);
 	    	mr2.setUpperBounds(100);
 	    	int tesxi = mr1.getUpperBounds();
-	    	System.out.println(sum);
+	    	System.out.println(sum);*/
 	    	
 	    	
 	    	String des = request.getServletContext().getRealPath("\\public\\img");

@@ -24,6 +24,8 @@ public interface SampleService {
 	
 	List<Product> listProductT(Product product); 
 	
+	List<Product> listCfjq(String[] arr);
+	
 	String selectSjmByLym(String str);
 	
 	List<Clothing> listClothing(Clothing clothing); 
